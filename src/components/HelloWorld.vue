@@ -1,58 +1,63 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <div>
+      <button @click="getPosts()">Get posts</button>
+    </div>
+    <div>
+      <button @click="getPost()">Get post 1</button>
+    </div>
+    <div>
+      <button @click="createPost()">Create post</button>
+    </div>
+    <div>
+      <button @click="updatePost()">Update post</button>
+    </div>
+    <div>
+      <button @click="deletePost()">delete post</button>
+    </div>
   </div>
 </template>
 
 <script>
+import container from "@/plugins/APISConsumer";
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data: () => ({
+      postAPI: container.get("post"),
+      commentAPI: container.get("comment"),
+  }),
+  methods: {
+    async getPosts() {
+      console.log(await this.postAPI.get())
+    },
+    async getPost() {
+      console.log(await this.postAPI.edit(1))
+    },
+    async createPost() {
+      console.log(await this.postAPI.store({
+        body: "Body 1",
+        title: "title 1",
+        userId: 1
+      }))
+    },
+    async updatePost() {
+      console.log(await this.postAPI.update(1, {
+        body: "Body 2",
+        title: "title 2",
+        userId: 2
+      }))
+    },
+    async deletePost() {
+      console.log(await this.postAPI.destroy(1))
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>
